@@ -705,24 +705,17 @@ async function init() {
         await syncFavoritesWithDB();
     }
     
-    // Fetch products last as it's async and might be slow
-    await checkServerConnection();
+    // Fetch products (this also implicitly checks server connection)
     await fetchProducts(); 
     updateFavoritesUI();
 }
 
+// checkServerConnection is redundant now as fetchProducts handles it
+/*
 async function checkServerConnection() {
-    try {
-        console.log('Checking server connection...');
-        const response = await fetch(`${API_URL}/products`);
-        if (response.ok) {
-            console.log('✅ Connected to Backend Server');
-        }
-    } catch (err) {
-        console.error('❌ Backend Server Unreachable:', err);
-        showToast(currentLang === 'ar' ? 'تنبيه: السيرفر غير متصل، سيتم استخدام البيانات المحلية.' : 'Notice: Server offline, using local data.', 'info');
-    }
+    ...
 }
+*/
 
 // --- DOM Fixer ---
 function fixGlobalDOM() {

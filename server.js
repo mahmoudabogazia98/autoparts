@@ -85,11 +85,34 @@ const dbConfig = {
 const db = mysql.createPool({
     ...dbConfig,
     waitForConnections: true,
-    connectionLimit: 10,
+    connectionLimit: 3, // Reduced from 10 to stay under the 5 connection limit of the host
     queueLimit: 0,
     multipleStatements: true,
+    connectTimeout: 10000, // 10 seconds timeout
+    enableKeepAlive: true,
+    keepAliveInitialDelay: 10000,
     ssl: {
-        rejectUnauthorized: false // Required for some cloud MySQL providers
+        rejectUnauthorized: false 
+    }
+});
+
+// Pool connection error handling
+db.on('connection', (connection) => {
+    console.log('[Pool] New connection established');
+});
+
+db.on('release', (connection) => {
+    // console.log('[Pool] Connection released');
+});
+
+db.on('error', (err) => {
+    console.error('[Pool Error]:', err);
+    if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+        console.error('[Pool Error] Connection was closed.');
+    } else if (err.code === 'ER_CON_COUNT_ERROR') {
+        console.error('[Pool Error] Too many connections.');
+    } else if (err.code === 'ECONNREFUSED') {
+        console.error('[Pool Error] Connection refused.');
     }
 });
 
