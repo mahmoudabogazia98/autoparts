@@ -1,0 +1,6 @@
+@echo off
+echo Cleaning up Port 5003...
+powershell -Command "Get-NetTCPConnection -LocalPort 5003 -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue }"
+echo Starting AutoParts Hub Server...
+node server.js
+pause

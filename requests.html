@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Requests - AutoParts Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Cairo:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚙️</text></svg>">
+</head>
+<body class="light-mode">
+    <header class="navbar">
+        <div class="container navbar-grid">
+            <div class="nav-brand"><a href="index.html" data-i18n="nav_brand">AutoParts Hub</a></div>
+            
+            <!-- Right: Actions -->
+            <div class="nav-actions">
+                <!-- Auth -->
+                <div class="auth-buttons">
+                    <a href="login.html" class="btn btn-outline" data-i18n="login"><i class="fas fa-sign-in-alt"></i> <span>Login</span></a>
+                    <a href="register.html" class="btn btn-primary" data-i18n="register"><i class="fas fa-user-plus"></i> <span>Register</span></a>
+                </div>
+
+                <div class="header-tools">
+                    <a href="index.html" class="btn-icon home-icon-mobile" title="Home" data-i18n-title="home_title">
+                        <i class="fas fa-home"></i>
+                    </a>
+                    <a href="requests.html" class="btn-icon" title="Requests" data-i18n-title="requests_title">
+                        <i class="fas fa-clipboard-list"></i>
+                    </a>
+                    <button id="themeToggle" class="btn-icon" title="Toggle Theme">
+                        <i class="fas fa-moon" id="themeIcon"></i>
+                    </button>
+                    <button id="langToggle" class="btn-text" title="Toggle Language">
+                        <span id="langText">AR</span>
+                    </button>
+                    <button class="badge-container btn-icon" id="openFavoritesModal" title="Favorites" data-i18n-title="favorites_title">
+                        <span id="favoritesCount" class="badge">0</span>
+                        <span class="icon">❤️</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container py-40 requests-page-bg">
+        <div class="section-header-premium">
+            <h1 class="section-title gradient-text-gold">طلبات قطع الغيار</h1>
+            <p class="section-subtitle">هنا بتلاقي كل القطع اللي الزباين محتاجاها.. لو عندك القطعة، تواصل مع المشتري فوراً!</p>
+        </div>
+
+        <div class="requests-action-bar">
+            <div class="premium-search-wrapper">
+                <i class="fas fa-search"></i>
+                <input type="text" id="requestSearch" placeholder="ابحث عن قطع غيار مطلوبة..." data-i18n-placeholder="search_requests_placeholder">
+            </div>
+            <div class="filter-group-premium">
+                <select id="requestCategoryFilter" class="premium-select">
+                    <option value="all" data-i18n="cat_all">كل الفئات</option>
+                    <option value="engine" data-i18n="cat_engine">محركات</option>
+                    <option value="lighting" data-i18n="cat_lighting">إضاءة</option>
+                    <option value="brakes" data-i18n="cat_brakes">فرامل</option>
+                </select>
+            </div>
+            
+            <div class="request-limit-box" id="requestLimitBox" style="display: none; align-items: center; gap: 8px; background: var(--card-bg); padding: 10px 20px; border-radius: 15px; border: 1px solid var(--border-color); font-weight: 700;">
+                <i class="fas fa-history" style="color: var(--primary-color);"></i>
+                <span data-i18n="remaining_requests">المتبقي اليوم: </span>
+                <strong id="requestLimitCount" style="color: var(--primary-color); font-size: 1.2rem;">2</strong>
+            </div>
+
+            <button id="openRequestModal" class="btn btn-primary">
+                <i class="fas fa-plus-circle"></i> <span data-i18n="post_request_btn">اطلب قطعة الآن</span>
+            </button>
+        </div>
+
+        <div id="requestsGrid" class="requests-grid-premium">
+            <!-- Requests will be injected here -->
+            <div class="grid-loader">
+                <div class="loader"></div>
+                <p>جاري تحميل الطلبات...</p>
+            </div>
+        </div>
+
+        <div class="pagination-container" style="text-align: center; margin-top: 40px; display: none;" id="paginationContainer">
+            <button id="showMoreBtn" class="btn btn-primary" style="min-width: 200px;">
+                <i class="fas fa-chevron-down"></i> <span data-i18n="more_link">عرض المزيد</span>
+            </button>
+            <button id="showLessBtn" class="btn btn-outline" style="min-width: 200px; display: none;">
+                <i class="fas fa-minus"></i> <span data-i18n="show_less">عرض الأقل</span>
+            </button>
+        </div>
+    </main>
+
+    <!-- Request Modal -->
+    <div id="requestModal" class="modal">
+        <div class="modal-content request-modal-content">
+            <span class="close-modal" id="closeRequestModal">&times;</span>
+            <div class="modal-header-elegant">
+                <h2 data-i18n="post_request_title">اطلب قطعة غيار</h2>
+                <p class="modal-subtitle" data-i18n="post_request_subtitle">اكتب تفاصيل القطعة اللي محتاجها وهيتواصل معاك التجار</p>
+            </div>
+            <form id="requestForm" class="elegant-form">
+                <div class="form-group">
+                    <label data-i18n="part_name">اسم القطعة</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">🔧</span>
+                        <input type="text" id="reqPartName" required placeholder="مثال: فانوس أمامى يمين تويوتا كورولا 2020">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label data-i18n="part_category">الفئة</label>
+                        <select id="reqCategory" required>
+                            <option value="engine">محركات</option>
+                            <option value="lighting">إضاءة</option>
+                            <option value="brakes">فرامل</option>
+                            <option value="body">هيكل خارجي</option>
+                            <option value="other">أخرى</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label data-i18n="details_label">تفاصيل إضافية</label>
+                    <textarea id="reqDetails" rows="3" placeholder="اكتب أي تفاصيل تانية تساعد التاجر يعرف طلبك بدقة..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label data-i18n="phone">رقم الهاتف (للتواصل)</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">📞</span>
+                        <input type="text" id="reqPhone" required placeholder="مثال: 01012345678">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>صورة للقطعة (إجباري)</label>
+                    <div class="input-with-icon" style="flex-direction: column; align-items: flex-start; padding: 10px;">
+                        <input type="file" id="reqImage" accept="image/*" required style="border: none; padding: 10px 0;">
+                        <div id="reqImagePreview" style="display: none; width: 100%; max-height: 200px; overflow: hidden; border-radius: 10px; margin-top: 10px;"></div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block btn-lg">🚀 نشر الطلب الآن</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const reqModal = document.getElementById('requestModal');
+            const openBtn = document.getElementById('openRequestModal');
+            const closeBtn = document.getElementById('closeRequestModal');
+            const reqForm = document.getElementById('requestForm');
+            const reqGrid = document.getElementById('requestsGrid');
+            const catFilter = document.getElementById('requestCategoryFilter');
+            const searchInput = document.getElementById('requestSearch');
+            const reqImageInput = document.getElementById('reqImage');
+            const reqImagePreview = document.getElementById('reqImagePreview');
+            const paginationContainer = document.getElementById('paginationContainer');
+            const showMoreBtn = document.getElementById('showMoreBtn');
+            const showLessBtn = document.getElementById('showLessBtn');
+
+            let allRequests = [];
+            let displayLimit = 9;
+            let showAll = false;
+
+            // Image Preview Listener
+            if (reqImageInput) {
+                reqImageInput.onchange = function() {
+                    const file = this.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            reqImagePreview.innerHTML = `<img src="${e.target.result}" style="width:100%; height:100%; object-fit:cover;">`;
+                            reqImagePreview.style.display = 'block';
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                };
+            }
+
+            showMoreBtn.onclick = () => {
+                showAll = true;
+                renderRequests();
+            };
+
+            showLessBtn.onclick = () => {
+                showAll = false;
+                renderRequests();
+                document.getElementById('requestsGrid').scrollIntoView({ behavior: 'smooth' });
+            };
+
+            openBtn.onclick = () => {
+                if (!currentUser) {
+                    showToast(currentLang === 'en' ? 'Please login to post a request' : 'يرجى تسجيل الدخول لنشر طلب', 'info');
+                    return;
+                }
+                reqModal.style.display = 'block';
+            };
+            closeBtn.onclick = () => reqModal.style.display = 'none';
+            window.onclick = (e) => { if (e.target == reqModal) reqModal.style.display = 'none'; };
+
+            async function fetchRequests() {
+                // Sync Request Limit UI if logged in
+                if (currentUser) {
+                    try {
+                        const res = await fetch(`${API_URL}/requests`);
+                        const allReqs = await res.json();
+                        const userReqsToday = allReqs.filter(r => 
+                            r.user_id === currentUser.id && 
+                            new Date(r.created_at) > new Date(Date.now() - 24 * 60 * 60 * 1000)
+                        );
+                        
+                        const remaining = Math.max(0, 2 - userReqsToday.length);
+                        const limitBox = document.getElementById('requestLimitBox');
+                        const limitCount = document.getElementById('requestLimitCount');
+                        
+                        if (limitBox && limitCount) {
+                            limitBox.style.display = 'flex';
+                            limitCount.textContent = remaining;
+                            
+                            const openBtn = document.getElementById('openRequestModal');
+                            if (remaining <= 0) {
+                                openBtn.disabled = true;
+                                openBtn.classList.add('btn-disabled');
+                                openBtn.title = translations[currentLang].daily_limit_reached;
+                            } else {
+                                openBtn.disabled = false;
+                                openBtn.classList.remove('btn-disabled');
+                                openBtn.title = '';
+                            }
+                        }
+                    } catch (e) { console.error('Limit sync failed', e); }
+                }
+
+                try {
+                    console.log('--- Fetching Requests Data ---');
+                    const response = await fetch(`${API_URL}/requests`);
+                    
+                    if (!response.ok) throw new Error(`Requests API error: ${response.status}`);
+
+                    allRequests = await response.json();
+                    console.log('Fetched Requests:', allRequests);
+                    
+                    renderRequests();
+                } catch (err) {
+                    console.error('Failed to fetch data:', err);
+                    reqGrid.innerHTML = `<div style="text-align:center; padding:20px; color:red;">
+                        <i class="fas fa-exclamation-triangle"></i> Error loading data: ${err.message}
+                    </div>`;
+                }
+            }
+
+            function renderRequests() {
+                const category = catFilter.value;
+                const query = searchInput.value.toLowerCase();
+
+                const filtered = allRequests.filter(r => {
+                    const matchesCategory = category === 'all' || r.category === category;
+                    const matchesSearch = r.part_name.toLowerCase().includes(query) || r.details.toLowerCase().includes(query);
+                    return matchesCategory && matchesSearch;
+                });
+
+                reqGrid.innerHTML = '';
+                if (filtered.length === 0) {
+                    reqGrid.innerHTML = `
+                        <div class="no-results">
+                            <i class="fas fa-search"></i>
+                            <p>مفيش طلبات حالياً بالشكل ده..</p>
+                            <span style="color: #636e72; font-size: 1.1rem;">جرب تبحث بكلمات تانية أو غير الفئة</span>
+                        </div>
+                    `;
+                    paginationContainer.style.display = 'none';
+                    return;
+                }
+
+                // Handle Pagination
+                const itemsToShow = showAll ? filtered : filtered.slice(0, displayLimit);
+                
+                if (filtered.length > displayLimit) {
+                    paginationContainer.style.display = 'block';
+                    if (showAll) {
+                        showMoreBtn.style.display = 'none';
+                        showLessBtn.style.display = 'inline-block';
+                    } else {
+                        showMoreBtn.style.display = 'inline-block';
+                        showLessBtn.style.display = 'none';
+                    }
+                } else {
+                    paginationContainer.style.display = 'none';
+                }
+
+                itemsToShow.forEach(r => {
+                    const card = document.createElement('div');
+                    card.className = 'request-card-premium';
+                    card.innerHTML = `
+                        <div class="request-content">
+                            <div class="request-header-premium">
+                                <h3 class="request-title">${sanitizeHTML(r.part_name)}</h3>
+                                <span class="request-category-badge">${translations[currentLang][`cat_${r.category}`] || sanitizeHTML(r.category)}</span>
+                            </div>
+
+                            <p class="request-details">${sanitizeHTML(r.details)}</p>
+                            
+                            <div class="request-image-preview" onclick="window.open('${r.image || 'https://via.placeholder.com/400x300?text=No+Image'}', '_blank')">
+                                <img src="${r.image || 'https://via.placeholder.com/400x300?text=No+Image'}" alt="${sanitizeHTML(r.part_name)}" onerror="this.src='https://via.placeholder.com/400x300?text=Image+Error'">
+                            </div>
+
+                            <div class="request-meta">
+                                <div class="meta-item">
+                                    <i class="fas fa-user"></i>
+                                    <span>${sanitizeHTML(r.requester_name)}</span>
+                                </div>
+                                <div class="meta-item">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <span>${r.created_at ? new Date(r.created_at).toLocaleDateString(currentLang === 'ar' ? 'ar-EG' : 'en-US') : ''}</span>
+                                </div>
+                            </div>
+                            <div class="request-actions">
+                                <a href="https://wa.me/${r.phone}?text=${encodeURIComponent(currentLang === 'ar' ? `بخصوص طلبك لقطعة: ${r.part_name}، أنا عندي القطعة دي ومتاحة حالياً.` : `Regarding your request for: ${r.part_name}, I have this part available.`)}" target="_blank" class="btn btn-primary btn-block">
+                                    <i class="fab fa-whatsapp"></i> تواصل مع المشتري
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                    reqGrid.appendChild(card);
+                });
+            }
+
+            // Form Submit
+            reqForm.onsubmit = async (e) => {
+                e.preventDefault();
+                const btn = reqForm.querySelector('button');
+                btn.disabled = true;
+                btn.innerHTML = '<span class="loader-mini"></span>';
+
+                const imageSrc = reqImagePreview.querySelector('img') ? reqImagePreview.querySelector('img').src : null;
+
+                if (!imageSrc) {
+                    showToast(currentLang === 'en' ? 'Please upload an image for your request!' : 'يرجى رفع صورة لطلبك!', 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = '🚀 نشر الطلب الآن';
+                    return;
+                }
+
+                const data = {
+                    user_id: currentUser.id,
+                    part_name: document.getElementById('reqPartName').value,
+                    category: document.getElementById('reqCategory').value,
+                    location: currentUser.address || 'Cairo', // Automatic from profile
+                    details: document.getElementById('reqDetails').value,
+                    phone: document.getElementById('reqPhone').value,
+                    image: imageSrc
+                };
+
+                try {
+                    const response = await fetch(`${API_URL}/requests`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+
+                    if (response.ok) {
+                        showToast(currentLang === 'en' ? 'Request posted!' : 'تم نشر طلبك بنجاح!', 'success');
+                        reqModal.style.display = 'none';
+                        reqForm.reset();
+                        reqImagePreview.style.display = 'none';
+                        // Refresh both data and limits
+                        fetchRequests();
+                    } else {
+                        const err = await response.json();
+                        showToast(err.error || 'Failed to post request', 'error');
+                    }
+                } catch (err) {
+                    showToast('Server error', 'error');
+                } finally {
+                    btn.disabled = false;
+                    btn.innerHTML = '🚀 نشر الطلب الآن';
+                }
+            };
+
+            catFilter.onchange = renderRequests;
+            searchInput.oninput = renderRequests;
+
+            fetchRequests();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Products - AutoParts Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Cairo:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚙️</text></svg>">
+</head>
+<body class="light-mode">
+    <header class="navbar">
+        <div class="container navbar-grid">
+            <div class="nav-brand"><a href="index.html" data-i18n="nav_brand">AutoParts Hub</a></div>
+            
+            <div class="nav-search-container desktop-only">
+                <div class="nav-search">
+                    <input type="text" id="searchInput" data-i18n-placeholder="search_placeholder" placeholder="Search..." autocomplete="off">
+                </div>
+                <div id="searchSuggestions" class="suggestions-box"></div>
+            </div>
+
+            <!-- Right: Actions -->
+            <div class="nav-actions">
+                <!-- Auth -->
+                <div class="auth-buttons">
+                    <a href="login.html" class="btn btn-outline" data-i18n="login"><i class="fas fa-sign-in-alt"></i> <span>Login</span></a>
+                    <a href="register.html" class="btn btn-primary" data-i18n="register"><i class="fas fa-user-plus"></i> <span>Register</span></a>
+                </div>
+
+                <div class="header-tools">
+                    <a href="index.html" class="btn-icon home-icon-mobile" title="Home" data-i18n-title="home_title">
+                        <i class="fas fa-home"></i>
+                    </a>
+                    <a href="requests.html" class="btn-icon" title="Requests" data-i18n-title="requests_title">
+                        <i class="fas fa-clipboard-list"></i>
+                    </a>
+                    <button id="themeToggle" class="btn-icon" title="Toggle Theme">
+                        <i class="fas fa-moon" id="themeIcon"></i>
+                    </button>
+                    <button id="langToggle" class="btn-text" title="Toggle Language">
+                        <span id="langText">AR</span>
+                    </button>
+                    <button class="badge-container btn-icon" id="openFavoritesModal" title="Favorites" data-i18n-title="favorites_title">
+                        <span id="favoritesCount" class="badge">0</span>
+                        <span class="icon">❤️</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container py-40">
+        <h2 class="section-title" data-i18n="all_products_title">Browse All Car Parts</h2>
+        
+        <!-- Mobile Search Bar (appears below Featured title on mobile) -->
+        <div class="nav-search-container mobile-only mb-20">
+            <div class="nav-search">
+                <input type="text" id="mobileSearchInput" data-i18n-placeholder="search_placeholder" placeholder="Search for car parts..." autocomplete="off">
+            </div>
+            <div id="mobileSearchSuggestions" class="suggestions-box"></div>
+        </div>
+
+        <div class="products-grid" id="productsGrid"></div>
+    </main>
+
+    <!-- Favorites Modal -->
+    <div id="favoritesModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeFavorites">&times;</span>
+            <h2 data-i18n="favorites_modal_title">Your Favorites</h2>
+            <div id="favoritesList" class="favorites-list"></div>
+        </div>
+    </div>
+
+    <!-- Product Detail Modal -->
+    <div id="productDetailModal" class="modal">
+        <div class="modal-content product-detail-modal-content">
+            <span class="close-modal" id="closeProductDetail">&times;</span>
+            <div class="detail-grid">
+                <div class="detail-image-box">
+                    <img id="detailImg" src="" alt="Product">
+                </div>
+                <div class="detail-info-box">
+                    <h2 id="detailName" class="detail-name">Product Name</h2>
+                    <p id="detailPrice" class="detail-price">$0.00</p>
+                    <ul class="detail-meta-list">
+                        <li><i class="fas fa-tag"></i> <span id="detailCategory">Category</span></li>
+                        <li><i class="fas fa-info-circle"></i> <span id="detailCondition">Condition</span></li>
+                        <li><i class="fas fa-map-marker-alt"></i> <span id="detailLocation">Location</span></li>
+                        <li><i class="fas fa-user"></i> <span id="detailSeller">Seller Name</span></li>
+                        <li><i class="fas fa-calendar-alt"></i> <span id="detailDate">Date</span></li>
+                    </ul>
+                    <div id="detailActions" class="detail-actions">
+                        <!-- Action buttons injected via JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-grid">
+            <!-- Column 1: Brand -->
+            <div class="footer-col brand-col">
+                <h3 class="footer-logo">AutoParts<span>Hub</span></h3>
+                <p data-i18n="footer_about_text">The most reliable car parts marketplace with instant updates and smart search.</p>
+                <div class="social-links">
+                    <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+
+            <!-- Column 2: Quick Links -->
+            <div class="footer-col">
+                <h4 data-i18n="footer_quick_links">Quick Links</h4>
+                <ul>
+                    <li><a href="index.html" data-i18n="nav_brand">Home</a></li>
+                    <li><a href="product.html" data-i18n="products_all">All Products</a></li>
+                    <li><a href="dashboard.html" data-i18n="dashboard">Dashboard</a></li>
+                    <li><a href="login.html" data-i18n="login">Login</a></li>
+                </ul>
+            </div>
+
+            <!-- Column 3: Contact Info -->
+            <div class="footer-col">
+                <h4 data-i18n="footer_contact_title">Contact Us</h4>
+                <ul class="contact-info">
+                    <li><span>📍</span> <span data-i18n="footer_address">Egypt</span></li>
+                    <li><span>📞</span> <span data-i18n="admin_phone">01093496054</span></li>
+                    <li><span>✉️</span> <span data-i18n="admin_email">mahmoud.hosni.24114@gmail.com</span></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <div class="container flex-between">
+                <p>&copy; 2026 AutoParts Hub. <span data-i18n="rights_reserved">All Rights Reserved.</span></p>
+                <div class="footer-terms">
+                    <a href="#" data-i18n="footer_terms_title">Terms</a> | 
+                    <a href="#" data-i18n="privacy_policy">Privacy Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
