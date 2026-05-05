@@ -3788,12 +3788,15 @@ html, body {
 }
 
 @media (max-width: 768px) {
+    body {
+        padding-top: 60px; /* Reduced to stick navbar to carousel */
+    }
     .navbar {
-        padding: 15px 0 10px; /* More top padding for "margin" feel */
+        padding: 5px 0; /* Reduced padding to stick to carousel */
     }
     .navbar-grid {
-        gap: 10px;
-        padding: 0 15px;
+        gap: 5px;
+        padding: 0 10px;
         display: flex !important;
         flex-direction: row !important;
         flex-wrap: nowrap !important;
@@ -3803,10 +3806,10 @@ html, body {
     .nav-brand {
         flex: 0 1 auto;
         min-width: 0;
-        margin-top: 2px; /* Slight margin top for alignment */
+        margin-right: 5px; /* Shift brand slightly to the right (RTL) */
     }
     .nav-brand a {
-        font-size: 1.1rem !important; /* Slightly larger but still fitting */
+        font-size: 1rem !important;
         letter-spacing: -0.5px;
         white-space: nowrap;
         overflow: hidden;
@@ -3821,6 +3824,7 @@ html, body {
         display: flex !important;
         flex-direction: row !important;
         align-items: center;
+        margin-left: 5px; /* Shift actions slightly to the left (RTL) */
     }
     .header-tools {
         display: flex !important;
@@ -3859,6 +3863,7 @@ html, body {
         padding: 4px 6px;
         min-width: 32px;
         height: 32px;
+        margin-left: 5px; /* Shift favorites icon slightly to the left (RTL) */
     }
     .badge {
         font-size: 0.6rem;

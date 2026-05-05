@@ -24,11 +24,16 @@ app.use(helmet({
     },
 }));
 
-// Rate Limiting: Prevent brute force (100 requests per 15 minutes per IP)
+// Rate Limiting: Prevent brute force (Relaxed to 500 requests per 15 minutes)
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, 
-    max: 100,
-    message: 'Too many requests from this IP, please try again after 15 minutes'
+    max: 500, // Increased from 100 to allow for more development/usage flexibility
+    message: { 
+        error: 'Too many requests from this IP, please try again after 15 minutes',
+        message_ar: 'طلبات كثيرة جداً، يرجى المحاولة مرة أخرى بعد 15 دقيقة'
+    },
+    standardHeaders: true,
+    legacyHeaders: false,
 });
 app.use('/api/', limiter);
 
@@ -85,10 +90,10 @@ const dbConfig = {
 const db = mysql.createPool({
     ...dbConfig,
     waitForConnections: true,
-    connectionLimit: 3, // Reduced from 10 to stay under the 5 connection limit of the host
+    connectionLimit: 1, // Reduced to 1 to be absolutely safe with serverless scaling on a 5-connection limit host
     queueLimit: 0,
     multipleStatements: true,
-    connectTimeout: 10000, // 10 seconds timeout
+    connectTimeout: 10000, 
     enableKeepAlive: true,
     keepAliveInitialDelay: 10000,
     ssl: {

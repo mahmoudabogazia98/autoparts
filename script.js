@@ -502,6 +502,12 @@ async function syncUserLimit() {
 
     try {
         const response = await fetch(`${API_URL}/users/me/${currentUser.id}`);
+        
+        if (response.status === 429) {
+            console.warn('Too many requests while syncing user limit');
+            return;
+        }
+
         const userData = await response.json();
         
         if (response.ok) {
@@ -1263,12 +1269,17 @@ window.handleLogout = handleLogout;
 
 // --- MySQL Fetch Products ---
 async function fetchProducts() {
+    if (isFetching) return;
     isFetching = true;
-    renderProducts(); // Show loader
-    
     try {
         console.log('Fetching products from DB...');
         const response = await fetch(`${API_URL}/products`);
+        
+        if (response.status === 429) {
+            const errorData = await response.json();
+            throw new Error(errorData.message_ar || 'Too many requests');
+        }
+        
         if (!response.ok) throw new Error('Failed to fetch from MySQL');
         const dbProducts = await response.json();
         
