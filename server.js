@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const bcrypt = require('bcryptjs');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const path = require('path');
 require('dotenv').config(); // Load environment variables
 
 const app = express();
@@ -96,14 +97,11 @@ const db = mysql.createPool({
 const initializeDB = async () => {
     let connection;
     try {
-        // For shared hosting like Clever Cloud, we don't try to create the DB
-        // We just connect directly to the assigned one.
         console.log(`Connecting to MySQL Database: ${dbConfig.database}...`);
-        
         connection = await db.promise().getConnection();
         console.log(`Successfully connected to Database: ${dbConfig.database}`);
 
-        // Create Users Table
+        // --- Create Tables ONLY if they don't exist ---
         await connection.query(`
             CREATE TABLE IF NOT EXISTS users (
                 id INT AUTO_INCREMENT PRIMARY KEY,
@@ -224,13 +222,14 @@ const initializeDB = async () => {
 
         console.log('Database Schema Re-initialized Successfully.');
     } catch (err) {
-        console.error('Database Initialization Error:', err);
+        console.error('Database Initialization Error:', err.message);
     } finally {
         if (connection) connection.release();
     }
 };
 
-initializeDB();
+// Call initialization but don't await it at top level to avoid Vercel timeout
+initializeDB().catch(err => console.error('Startup Error:', err));
 
 // --- Background Task: Archive Sold Products ---
 // This task runs every hour and moves sold products older than 47 hours to sold_history table
