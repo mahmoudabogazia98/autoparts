@@ -931,19 +931,6 @@ function fixGlobalDOM() {
                     margin-top: 20px;
                 }
                 
-                .sidebar-toggle-btn {
-                    position: fixed;
-                    bottom: 25px;
-                    right: 20px;
-                    top: auto !important;
-                    left: auto !important;
-                    z-index: 2500;
-                    width: 60px;
-                    height: 60px;
-                    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-                }
-                [dir="rtl"] .sidebar-toggle-btn { right: auto; left: 20px; }
-
                 /* New Mobile Profile Trigger Styles */
                 .mobile-profile-trigger {
                     display: flex;
@@ -1133,25 +1120,9 @@ function fixDashboardDOM() {
             }
         }
 
-        // 2. Sidebar Toggle and Overlay for Mobile
+        // 2. Sidebar Overlay for Mobile (Keep overlay logic but without floating toggle button)
         const sidebar = document.querySelector('.dashboard-sidebar');
-        if (sidebar && !document.querySelector('.sidebar-toggle-btn')) {
-            // Add toggle button
-            const toggleBtn = document.createElement('button');
-            toggleBtn.className = 'sidebar-toggle-btn mobile-only';
-            
-            // Use User Avatar if available, otherwise use a nice icon
-            const userIcon = currentUser && currentUser.profile_image 
-                ? `<img src="${currentUser.profile_image}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`
-                : `<span style="font-size: 1.2rem;">👤</span>`;
-            
-            toggleBtn.innerHTML = `
-                ${userIcon}
-                <span class="toggle-badge"></span>
-            `;
-            toggleBtn.title = currentLang === 'ar' ? "الملف الشخصي" : "Profile Settings";
-            document.body.appendChild(toggleBtn);
-
+        if (sidebar) {
             // Add overlay
             const overlay = document.createElement('div');
             overlay.className = 'sidebar-overlay';
@@ -1162,7 +1133,6 @@ function fixDashboardDOM() {
                 overlay.classList.toggle('active');
             };
 
-            toggleBtn.addEventListener('click', toggleMenu);
             overlay.addEventListener('click', toggleMenu);
 
             // 3. Mobile Profile Header Trigger Logic

@@ -273,35 +273,9 @@ body {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
-/* Featured Products Search Bar - Enhanced (Mobile View Only) */
-@media (max-width: 991px) {
-    .nav-search-container.mobile-only {
-        display: block !important;
-        margin: 25px 0;
-        background: var(--card-bg);
-        padding: 12px;
-        border-radius: 18px;
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
-        border: 2px solid var(--primary-color); /* Highlighted with primary color */
-    }
-
-    .nav-search-container.mobile-only input {
-        width: 100%;
-        border: none;
-        background: var(--bg-color);
-        border-radius: 12px;
-        padding: 14px 20px;
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: var(--text-color);
-        outline: none;
-        transition: var(--transition);
-    }
-
-    .nav-search-container.mobile-only input:focus {
-        background: var(--card-bg);
-        box-shadow: inset 0 0 0 2px var(--primary-color);
-    }
+/* Responsive Navbar - Mobile Optimization handled at the end of file for priority */
+@media (max-width: 768px) {
+    /* Base navbar mobile adjustments moved to end of file */
 }
 
 /* Re-using Desktop Search Suggestions for Mobile Search */
@@ -544,9 +518,10 @@ a[href="requests.html"].btn-icon i {
 .hero-slide {
     height: 70vh;
     min-height: 400px;
-    background-size: cover;
+    background-size: cover; /* Changed back to cover for full width */
     background-position: center;
     background-repeat: no-repeat;
+    background-color: #f1f2f6; /* Added a light background color for empty areas */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -3814,38 +3789,54 @@ html, body {
 
 @media (max-width: 768px) {
     .navbar {
-        padding: 8px 0; /* رجوع الناف بار لمكانها الطبيعي */
+        padding: 15px 0 10px; /* More top padding for "margin" feel */
     }
     .navbar-grid {
-        gap: 8px;
-        padding: 0 10px;
-        flex-wrap: nowrap; /* Force side-by-side */
+        gap: 10px;
+        padding: 0 15px;
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        justify-content: space-between !important;
+        align-items: center !important;
     }
     .nav-brand {
-        flex-shrink: 0;
+        flex: 0 1 auto;
+        min-width: 0;
+        margin-top: 2px; /* Slight margin top for alignment */
     }
     .nav-brand a {
-        font-size: 1.1rem !important;
-        letter-spacing: -1px;
+        font-size: 1.1rem !important; /* Slightly larger but still fitting */
+        letter-spacing: -0.5px;
         white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: block;
     }
     .nav-actions {
-        gap: 5px;
-        flex-shrink: 1;
+        gap: 6px;
+        flex: 1 1 auto;
         min-width: 0;
         justify-content: flex-end;
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center;
     }
     .header-tools {
         display: flex !important;
-        gap: 3px;
+        gap: 4px;
+        align-items: center;
     }
     .header-tools .btn-icon, .header-tools .btn-text {
         font-size: 1.1rem;
-        padding: 5px;
+        padding: 6px;
+        min-width: 34px;
+        height: 34px;
     }
     .auth-buttons {
         display: flex !important;
-        gap: 3px;
+        gap: 4px;
+        align-items: center;
     }
     .auth-buttons .btn {
         padding: 6px 8px;
